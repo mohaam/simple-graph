@@ -1,0 +1,74 @@
+#include<iostream>
+#include<cstdlib>
+#include<ctime>
+#include<string>
+#include<new>
+
+using namespace std;
+void fill_matrix(int nodes, int* adj_matrix);
+void display_adj_matrix(int nodes, int* adj_matrix);
+int index(int x, int y, int nodes);
+
+int main()
+{
+	char cont;
+	int nodes;
+	int* adj_matrix;
+	do
+	{
+	cout<<"Enter the number of vertices: "<<endl;
+	cin>>nodes;
+	adj_matrix = new (nothrow) int [nodes * nodes];
+	if(adj_matrix == NULL)
+	{
+		cout<<"an error occured as the number of vertices is very large for the resources of this computer, Please enter a smaller number"<<endl;
+	}
+	else
+	{
+		fill_matrix(nodes, adj_matrix);
+		display_adj_matrix(nodes, adj_matrix);
+		delete[] adj_matrix;
+		cout<<"To enter another vertices press 'Y', to exit press any key"<<endl;
+		cin>>cont;
+	}
+	}while(cont == 'Y' || cont == 'y');
+}
+
+void fill_matrix(int nodes, int* adj_matrix)
+{	
+	srand(time(NULL));
+	for(int row = 0;row < nodes;row++)
+	{
+		for(int col = 0;col < nodes;col++)
+		{
+			if(row == col)
+				adj_matrix[index(row, col, nodes)] = 0;
+			else if(row < col)
+				adj_matrix[index(row, col, nodes)] = rand() % 2;
+			else if(row > col)
+				((adj_matrix[index(col, row, nodes)] == 1) ? adj_matrix[index(row, col, nodes)] = 0 : adj_matrix[index(row, col, nodes)] = 1);
+		}
+	}
+}
+
+void display_adj_matrix(int nodes, int* adj_matrix)
+{
+	for(int row = 0;row < nodes;row++)
+	{	
+		if(row == 0)
+			cout<<"The adjacency matrix is: "<<endl;
+		else 
+			cout<<endl;
+		for(int col = 0;col < nodes;col++)
+		{
+			cout<<adj_matrix[index(row, col, nodes)];
+			cout<<" ";
+		}
+	}
+	cout<<endl;
+}
+
+int index(int x, int y, int nodes)
+{
+	return x + nodes * y; 
+}
